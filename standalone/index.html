@@ -102,6 +102,7 @@
 
       <div class="w-full md:w-1/3 flex-shrink-0">
         <img id="modalPoster" src="" alt="Poster" class="w-full h-auto rounded-xl shadow-md border border-slate-800 object-cover">
+        <p id="modalPosterCredit" class="hidden mt-2 text-xs leading-relaxed text-slate-400"></p>
       </div>
 
       <div class="w-full md:w-2/3 flex flex-col justify-between">
@@ -194,7 +195,7 @@
       { title: "Spider-Man: Brand New Day", phase: "Phase 6", type: "Movie", year: 2026, rating: "TBD", description: "Peter Parker embarks on a fresh path in New York City.", poster: "https://upload.wikimedia.org/wikipedia/en/9/9a/Spider-Man_Brand_New_Day_poster.jpg" },
 
       { title: "Avengers: Doomsday", phase: "Upcoming", type: "Movie", year: 2026, rating: "TBD", description: "The Avengers face off against Doctor Doom in a major multiversal showdown.", poster: "https://upload.wikimedia.org/wikipedia/en/e/ee/Avengers_Doomsday_poster.jpg" },
-      { title: "Avengers: Secret Wars", phase: "Upcoming", type: "Movie", year: 2027, rating: "TBD", description: "The grand finale of the Multiverse Saga bringing together iconic heroes across worlds." }
+      { title: "Avengers: Secret Wars", phase: "Upcoming", type: "Movie", year: 2027, rating: "TBD", description: "The grand finale of the Multiverse Saga bringing together iconic heroes across worlds.", poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Avengers_Secret_Wars_Logo.svg/960px-Avengers_Secret_Wars_Logo.svg.png", posterFit: "contain-light", posterAlt: "Unofficial fan-made Avengers: Secret Wars logo", posterCredit: { author: "Josephzbazin", source: "https://commons.wikimedia.org/wiki/File:Avengers_Secret_Wars_Logo.svg", license: "https://creativecommons.org/licenses/by-sa/4.0/" } }
     ];
 
     let watchlist = JSON.parse(localStorage.getItem('mcu_watchlist') || '[]');
@@ -212,6 +213,7 @@
     const detailModal = document.getElementById('detailModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const modalPoster = document.getElementById('modalPoster');
+    const modalPosterCredit = document.getElementById('modalPosterCredit');
     const modalTitle = document.getElementById('modalTitle');
     const modalPhase = document.getElementById('modalPhase');
     const modalYear = document.getElementById('modalYear');
@@ -267,12 +269,16 @@
       grid.innerHTML = filtered.map(movie => {
         const isUpcoming = movie.phase === "Upcoming";
         const poster = movie.poster || createSvgFallback(movie.title, movie.phase);
-        const posterFit = movie.posterFit === "contain" ? "object-contain p-6" : "object-cover";
+        const posterFit = movie.posterFit === "contain" ? "object-contain p-6" :
+          movie.posterFit === "contain-light" ? "object-contain p-6 bg-white" : "object-cover";
+        const posterCredit = movie.posterCredit
+          ? `<p class="mt-2 text-[9px] leading-tight text-slate-400"><span>Unofficial fan-made logo by </span><a href="${movie.posterCredit.source}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="underline hover:text-white">${movie.posterCredit.author}</a><span> · </span><a href="${movie.posterCredit.license}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="underline hover:text-white">CC BY-SA 4.0</a></p>`
+          : "";
 
         return `
           <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-lg hover:border-slate-600 transition flex flex-col group cursor-pointer" onclick="openModal('${movie.title.replace(/'/g, "\'")}')">
             <div class="relative aspect-[2/3] bg-slate-950 overflow-hidden">
-              <img src="${poster}" alt="${movie.title}" loading="lazy" decoding="async"
+              <img src="${poster}" alt="${movie.posterAlt || movie.title}" loading="lazy" decoding="async"
                    class="w-full h-full ${posterFit} group-hover:scale-105 transition duration-300"
                    onerror="this.onerror=null; this.src='${createSvgFallback(movie.title.replace(/'/g, "&apos;"), movie.phase)}';">
               <span class="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold rounded ${isUpcoming ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'} shadow">
@@ -286,6 +292,7 @@
                   <span>${movie.year}</span>
                   <span class="text-amber-400 font-semibold"><i class="fa-solid fa-star text-[10px]"></i> ${movie.rating}</span>
                 </div>
+                ${posterCredit}
               </div>
             </div>
           </div>
@@ -305,6 +312,14 @@
       modalRating.innerHTML = `<i class="fa-solid fa-star mr-1"></i> ${movie.rating}`;
       modalDescription.textContent = movie.description;
       modalPoster.src = movie.poster || createSvgFallback(movie.title, movie.phase);
+      modalPoster.alt = movie.posterAlt || movie.title;
+      modalPoster.classList.toggle("object-contain", movie.posterFit === "contain-light");
+      modalPoster.classList.toggle("object-cover", movie.posterFit !== "contain-light");
+      modalPoster.classList.toggle("bg-white", movie.posterFit === "contain-light");
+      modalPosterCredit.innerHTML = movie.posterCredit
+        ? `Unofficial fan-made logo by <a href="${movie.posterCredit.source}" target="_blank" rel="noopener noreferrer" class="underline hover:text-white">${movie.posterCredit.author}</a>. Licensed under <a href="${movie.posterCredit.license}" target="_blank" rel="noopener noreferrer" class="underline hover:text-white">CC BY-SA 4.0</a>.`
+        : "";
+      modalPosterCredit.classList.toggle("hidden", !movie.posterCredit);
       modalPoster.onerror = function() {
         this.onerror = null;
         this.src = createSvgFallback(movie.title, movie.phase);
