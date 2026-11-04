@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MARVEL MULTIVERSE ARCHIVE: The Ultimate MCU Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .phase-btn.active {
+      border-color: #ef4444;
+      background-color: #991b1b;
+      color: white;
+    }
+    .phase-btn.upcoming-active {
+      border-color: #10b981;
+      background-color: #065f46;
+      color: white;
+    }
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Navigation Header -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-film text-red-600 text-3xl"></i>
+        <h1 class="text-2xl font-black tracking-wider uppercase bg-gradient-to-r from-red-500 via-rose-400 to-amber-400 bg-clip-text text-transparent">
+          MARVEL MULTIVERSE ARCHIVE
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-3 w-full md:w-auto">
+        <div class="relative w-full md:w-80">
+          <input type="text" id="searchInput" placeholder="Search movies, series, characters..." 
+            class="w-full bg-slate-800 text-slate-200 border border-slate-700 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-red-500 transition-colors">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
+        </div>
+        <button id="watchlistToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-4 py-2 rounded-full border border-slate-700 font-medium transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>Watchlist (<span id="watchlistCount">0</span>)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase Filters Bar -->
+    <div class="max-w-7xl mx-auto px-4 pb-4 overflow-x-auto">
+      <div class="flex items-center gap-2 min-w-max" id="phaseFilterContainer">
+        <button data-phase="ALL" class="phase-btn active px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold transition">
+          All
+        </button>
+        <button data-phase="Phase 1" class="phase-btn px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold transition">
+          Phase 1
+        </button>
+        <button data-phase="Phase 2" class="phase-btn px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold transition">
+          Phase 2
+        </button>
+        <button data-phase="Phase 3" class="phase-btn px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold transition">
+          Phase 3
+        </button>
+        <button data-phase="Phase 4" class="phase-btn px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold transition">
+          Phase 4
+        </button>
+        <button data-phase="Phase 5" class="phase-btn px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold transition">
+          Phase 5
+        </button>
+        <button data-phase="Phase 6" class="phase-btn px-4 py-1.5 rounded-full border border-slate-700 text-sm font-semibold transition">
+          Phase 6
+        </button>
+        <button data-phase="Upcoming" id="upcomingBtn" class="phase-btn px-4 py-1.5 rounded-full border border-emerald-500 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold shadow-lg shadow-emerald-900/50 transition">
+          <i class="fa-solid fa-rocket mr-1"></i> Upcoming
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Grid -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-grow">
+    <div id="mcuGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+    <div id="noResults" class="hidden text-center py-20 text-slate-400">
+      <i class="fa-solid fa-ghost text-5xl mb-4"></i>
+      <p class="text-xl">No Marvel titles found matching your criteria.</p>
+    </div>
+  </main>
+
+  <!-- Modal Detail Window -->
+  <div id="detailModal" class="fixed inset-0 modal-backdrop hidden z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl flex flex-col md:flex-row gap-6">
+      <button id="closeModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="w-full md:w-1/3 flex-shrink-0">
+        <img id="modalPoster" src="" alt="Poster" class="w-full h-auto rounded-xl shadow-md border border-slate-800 object-cover">
+      </div>
+
+      <div class="w-full md:w-2/3 flex flex-col justify-between">
+        <div>
+          <span id="modalPhase" class="inline-block px-3 py-1 bg-red-900/50 border border-red-700 text-red-300 rounded-full text-xs font-bold mb-2"></span>
+          <h2 id="modalTitle" class="text-2xl font-black mb-2 text-white"></h2>
+          
+          <div class="flex items-center gap-4 text-sm text-slate-400 mb-4">
+            <span id="modalYear"><i class="fa-regular fa-calendar mr-1"></i></span>
+            <span id="modalType"><i class="fa-solid fa-tv mr-1"></i></span>
+            <span id="modalRating" class="text-amber-400 font-bold"><i class="fa-solid fa-star mr-1"></i></span>
+          </div>
+
+          <p id="modalDescription" class="text-slate-300 text-sm leading-relaxed mb-6"></p>
+        </div>
+
+        <button id="modalWatchlistBtn" class="w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 border transition">
+          <i class="fa-solid fa-bookmark"></i> <span>Add to Watchlist</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const moviesData = [
+      { title: "Iron Man", phase: "Phase 1", type: "Movie", year: 2008, rating: "7.9", description: "Tony Stark builds a high-tech suit of armor to fight global terrorism.", poster: "https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg" },
+      { title: "The Incredible Hulk", phase: "Phase 1", type: "Movie", year: 2008, rating: "6.6", description: "Bruce Banner seeks a cure for the gamma radiation that turns him into a green monster.", poster: "https://upload.wikimedia.org/wikipedia/en/8/88/The_Incredible_Hulk_poster.jpg" },
+      { title: "Iron Man 2", phase: "Phase 1", type: "Movie", year: 2010, rating: "6.9", description: "Tony Stark faces pressure from the government and a vengeance-seeking enemy.", poster: "https://upload.wikimedia.org/wikipedia/en/e/ed/Iron_Man_2_poster.jpg" },
+      { title: "Thor", phase: "Phase 1", type: "Movie", year: 2011, rating: "7.0", description: "The powerful god Thor is banished to Earth after reigniting an ancient war.", poster: "https://upload.wikimedia.org/wikipedia/en/7/7f/Thor_%28film%29_poster.jpg" },
+      { title: "Captain America: The First Avenger", phase: "Phase 1", type: "Movie", year: 2011, rating: "6.9", description: "Steve Rogers becomes Super Soldier Captain America to combat Hydra in WWII.", poster: "https://upload.wikimedia.org/wikipedia/en/3/37/Captain_America_The_First_Avenger_poster.jpg" },
+      { title: "The Avengers", phase: "Phase 1", type: "Movie", year: 2012, rating: "8.0", description: "Earth's mightiest heroes unite to stop Loki and an alien invasion.", poster: "https://upload.wikimedia.org/wikipedia/en/8/8a/The_Avengers_%282012_film%29_poster.jpg" },
+
+      { title: "Iron Man 3", phase: "Phase 2", type: "Movie", year: 2013, rating: "7.1", description: "Tony Stark embarks on a journey of retribution against the mysterious Mandarin.", poster: "https://upload.wikimedia.org/wikipedia/en/1/19/Iron_Man_3_poster.jpg" },
+      { title: "Thor: The Dark World", phase: "Phase 2", type: "Movie", year: 2013, rating: "6.8", description: "Thor battles Malekith and the Dark Elves to save Nine Realms.", poster: "https://upload.wikimedia.org/wikipedia/en/7/7e/Thor_The_Dark_World_poster.jpg" },
+      { title: "Captain America: The Winter Soldier", phase: "Phase 2", type: "Movie", year: 2014, rating: "7.8", description: "Cap uncovers a conspiracy within S.H.I.E.L.D. while facing a deadly assassin.", poster: "https://upload.wikimedia.org/wikipedia/en/9/9e/Captain_America_The_Winter_Soldier_poster.jpg" },
+      { title: "Guardians of the Galaxy", phase: "Phase 2", type: "Movie", year: 2014, rating: "8.0", description: "A group of intergalactic misfits band together to stop a cosmic warlord.", poster: "https://upload.wikimedia.org/wikipedia/en/b/b5/Guardians_of_the_Galaxy_poster.jpg" },
+      { title: "Avengers: Age of Ultron", phase: "Phase 2", type: "Movie", year: 2015, rating: "7.3", description: "The Avengers fight to destroy the rogue artificial intelligence Ultron.", poster: "https://upload.wikimedia.org/wikipedia/en/f/ff/Avengers_Age_of_Ultron_poster.jpg" },
+      { title: "Ant-Man", phase: "Phase 2", type: "Movie", year: 2015, rating: "7.3", description: "Thief Scott Lang acquires a suit that allows him to shrink in scale but increase in strength.", poster: "https://upload.wikimedia.org/wikipedia/en/7/75/Ant-Man_poster.jpg" },
+
+      { title: "Captain America: Civil War", phase: "Phase 3", type: "Movie", year: 2016, rating: "7.8", description: "Government oversight fractures the Avengers into opposing factions.", poster: "https://upload.wikimedia.org/wikipedia/en/5/53/Captain_America_Civil_War_poster.jpg" },
+      { title: "Doctor Strange", phase: "Phase 3", type: "Movie", year: 2016, rating: "7.5", description: "A brilliant neurosurgeon learns the mystic arts after a tragic accident.", poster: "https://upload.wikimedia.org/wikipedia/en/a/a1/Doctor_Strange_%282016_film%29_poster.jpg" },
+      { title: "Guardians of the Galaxy Vol. 2", phase: "Phase 3", type: "Movie", year: 2017, rating: "7.6", description: "The Guardians travel across the cosmos and uncover Peter Quill's parentage.", poster: "https://upload.wikimedia.org/wikipedia/en/a/ab/Guardians_of_the_Galaxy_Vol_2_poster.jpg" },
+      { title: "Spider-Man: Homecoming", phase: "Phase 3", type: "Movie", year: 2017, rating: "7.4", description: "Peter Parker balances high school life with his superhero duty fighting Vulture.", poster: "https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg" },
+      { title: "Thor: Ragnarok", phase: "Phase 3", type: "Movie", year: 2017, rating: "7.9", description: "Imprisoned on Sakar, Thor must race against time to stop Hela from destroying Asgard.", poster: "https://upload.wikimedia.org/wikipedia/en/7/7d/Thor_Ragnarok_poster.jpg" },
+      { title: "Black Panther", phase: "Phase 3", type: "Movie", year: 2018, rating: "7.3", description: "T'Challa returns home as king of Wakanda but finds his sovereignty challenged.", poster: "https://upload.wikimedia.org/wikipedia/en/d/d6/Black_Panther_%28film%29_poster.jpg" },
+      { title: "Avengers: Infinity War", phase: "Phase 3", type: "Movie", year: 2018, rating: "8.4", description: "The Avengers and their allies sacrifice all to defeat powerful Thanos.", poster: "https://upload.wikimedia.org/wikipedia/en/4/4d/Avengers_Infinity_War_poster.jpg" },
+      { title: "Ant-Man and the Wasp", phase: "Phase 3", type: "Movie", year: 2018, rating: "7.0", description: "Scott Lang teams up with Hope van Dyne on an urgent quantum mission.", poster: "https://upload.wikimedia.org/wikipedia/en/2/2c/Ant-Man_and_the_Wasp_poster.jpg" },
+      { title: "Captain Marvel", phase: "Phase 3", type: "Movie", year: 2019, rating: "6.8", description: "Carol Danvers becomes one of the universe's most powerful heroes.", poster: "https://upload.wikimedia.org/wikipedia/en/4/4e/Captain_Marvel_%28film%29_poster.jpg" },
+      { title: "Avengers: Endgame", phase: "Phase 3", type: "Movie", year: 2019, rating: "8.4", description: "The remaining Avengers execute a plan to reverse Thanos's devastating snap.", poster: "https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg" },
+      { title: "Spider-Man: Far From Home", phase: "Phase 3", type: "Movie", year: 2019, rating: "7.4", description: "Peter Parker's European school trip is disrupted by mysterious elementals.", poster: "https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg" },
+
+      { title: "WandaVision", phase: "Phase 4", type: "Series", year: 2021, rating: "7.9", description: "Wanda and Vision live idyllic suburban lives, but suspect everything is not as it seems.", poster: "https://upload.wikimedia.org/wikipedia/en/3/3d/WandaVision_poster.jpg" },
+      { title: "The Falcon and the Winter Soldier", phase: "Phase 4", type: "Series", year: 2021, rating: "7.1", description: "Sam Wilson and Bucky Barnes team up on a global adventure that tests their abilities.", poster: "https://upload.wikimedia.org/wikipedia/en/f/f6/The_Falcon_and_the_Winter_Soldier_poster.jpg" },
+      { title: "Loki Season 1", phase: "Phase 4", type: "Series", year: 2021, rating: "8.2", description: "The God of Mischief steps out of his brother's shadow in a journey through time.", poster: "https://upload.wikimedia.org/wikipedia/en/c/c5/Loki_season_1_poster.jpg" },
+      { title: "Black Widow", phase: "Phase 4", type: "Movie", year: 2021, rating: "6.7", description: "Natasha Romanoff confronts the darker parts of her ledger when a dangerous conspiracy arises.", poster: "https://upload.wikimedia.org/wikipedia/en/e/e9/Black_Widow_%282021_film%29_poster.jpg" },
+      { title: "What If...? Season 1", phase: "Phase 4", type: "Series", year: 2021, rating: "7.4", description: "Exploring pivotal moments from the MCU and turning them on their head.", poster: "https://upload.wikimedia.org/wikipedia/en/1/1b/What_If...%3F_season_1_poster.jpg" },
+      { title: "Shang-Chi and the Legend of the Ten Rings", phase: "Phase 4", type: "Movie", year: 2021, rating: "7.4", description: "Shang-Chi must confront the past he thought he left behind when he is drawn into the Ten Rings.", poster: "https://upload.wikimedia.org/wikipedia/en/7/74/Shang-Chi_and_the_Legend_of_the_Ten_Rings_poster.jpeg" },
+      { title: "Eternals", phase: "Phase 4", type: "Movie", year: 2021, rating: "6.3", description: "Ancient immortal beings emerge to reunite and protect Earth from the Deviants.", poster: "https://upload.wikimedia.org/wikipedia/en/9/9b/Eternals_poster.jpg" },
+      { title: "Hawkeye", phase: "Phase 4", type: "Series", year: 2021, rating: "7.5", description: "Clint Barton must team up with young archer Kate Bishop to confront enemies from his past.", poster: "https://upload.wikimedia.org/wikipedia/en/0/05/Hawkeye_poster.jpg" },
+      { title: "Spider-Man: No Way Home", phase: "Phase 4", type: "Movie", year: 2021, rating: "8.2", description: "Multiversal villains arrive after a spell cast by Doctor Strange goes wrong.", poster: "https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg" },
+      { title: "Moon Knight", phase: "Phase 4", type: "Series", year: 2022, rating: "7.3", description: "Steven Grant discovers he has dissociative identity disorder and shares a body with mercenary Marc Spector.", poster: "https://upload.wikimedia.org/wikipedia/en/a/a2/Moon_Knight_poster.jpg" },
+      { title: "Doctor Strange in the Multiverse of Madness", phase: "Phase 4", type: "Movie", year: 2022, rating: "6.9", description: "Doctor Strange traverses terrifying alternate realities of the Multiverse.", poster: "https://upload.wikimedia.org/wikipedia/en/1/17/Doctor_Strange_in_the_Multiverse_of_Madness_poster.jpg" },
+      { title: "Ms. Marvel", phase: "Phase 4", type: "Series", year: 2022, rating: "6.3", description: "Kamala Khan, a Jersey City super-fan of Captain Marvel, gets superpowers of her own.", poster: "https://upload.wikimedia.org/wikipedia/en/8/88/Ms._Marvel_poster.jpg" },
+      { title: "Thor: Love and Thunder", phase: "Phase 4", type: "Movie", year: 2022, rating: "6.2", description: "Thor enlists Valkyrie, Korg and ex-girlfriend Jane Foster to fight Gorr the God Butcher.", poster: "https://upload.wikimedia.org/wikipedia/en/8/88/Thor_Love_and_Thunder_poster.jpg" },
+      { title: "I Am Groot", phase: "Phase 4", type: "Series", year: 2022, rating: "6.7", description: "A series of animated shorts following Baby Groot's adventures through the galaxy.", poster: "https://upload.wikimedia.org/wikipedia/en/9/90/I_Am_Groot_poster.jpg" },
+      { title: "She-Hulk: Attorney at Law", phase: "Phase 4", type: "Series", year: 2022, rating: "5.3", description: "Jennifer Walters navigates the complicated life of a single, 30-something attorney who turns into a green 6-foot-7-inch superpowered Hulk.", poster: "https://upload.wikimedia.org/wikipedia/en/a/a9/She-Hulk_Attorney_at_Law_poster.jpg" },
+      { title: "Werewolf by Night", phase: "Phase 4", type: "Special", year: 2022, rating: "7.2", description: "A secret cabal of monster hunters emerge from the shadows to compete for a powerful relic.", poster: "https://upload.wikimedia.org/wikipedia/en/6/60/Werewolf_by_Night_poster.jpg" },
+      { title: "Black Panther: Wakanda Forever", phase: "Phase 4", type: "Movie", year: 2022, rating: "6.7", description: "Wakanda fights to protect its nation from intervening world powers.", poster: "https://upload.wikimedia.org/wikipedia/en/9/9f/Black_Panther_Wakanda_Forever_poster.jpg" },
+      { title: "The Guardians of the Galaxy Holiday Special", phase: "Phase 4", type: "Special", year: 2022, rating: "7.7", description: "The Guardians head to Earth to find the ultimate Christmas present for Peter Quill.", poster: "https://upload.wikimedia.org/wikipedia/en/c/c4/The_Guardians_of_the_Galaxy_Holiday_Special_poster.jpg" },
+
+      { title: "Ant-Man and the Wasp: Quantumania", phase: "Phase 5", type: "Movie", year: 2023, rating: "6.1", description: "Scott Lang and Hope van Dyne explore the Quantum Realm and face Kang the Conqueror.", poster: "https://upload.wikimedia.org/wikipedia/en/3/30/Ant-Man_and_the_Wasp_Quantumania_poster.jpg" },
+      { title: "Guardians of the Galaxy Vol. 3", phase: "Phase 5", type: "Movie", year: 2023, rating: "7.9", description: "Peter Quill rallies his team to defend the universe and save Rocket.", poster: "https://upload.wikimedia.org/wikipedia/en/7/74/Guardians_of_the_Galaxy_Vol._3_poster.jpg" },
+      { title: "Secret Invasion", phase: "Phase 5", type: "Series", year: 2023, rating: "6.0", description: "Nick Fury learns of a clandestine invasion of Earth by a faction of shapeshifting Skrulls.", poster: "https://upload.wikimedia.org/wikipedia/en/1/13/Secret_Invasion_poster.jpg" },
+      { title: "Loki Season 2", phase: "Phase 5", type: "Series", year: 2023, rating: "8.2", description: "Loki navigates an ever-expanding, increasingly dangerous multiverse to fix the TVA.", poster: "https://upload.wikimedia.org/wikipedia/en/9/98/Loki_season_2_poster.jpg" },
+      { title: "The Marvels", phase: "Phase 5", type: "Movie", year: 2023, rating: "5.5", description: "Carol Danvers, Kamala Khan, and Monica Rambeau entangle powers.", poster: "https://upload.wikimedia.org/wikipedia/en/d/d4/The_Marvels_poster.jpg" },
+      { title: "What If...? Season 2", phase: "Phase 5", type: "Series", year: 2023, rating: "7.5", description: "The Watcher continues to guide viewers through the vast multiverse.", poster: "https://upload.wikimedia.org/wikipedia/en/4/4b/What_If...%3F_season_2_poster.jpg" },
+      { title: "Echo", phase: "Phase 5", type: "Series", year: 2024, rating: "6.0", description: "Maya Lopez must face her past, reconnect with her Native American roots, and embrace family.", poster: "https://upload.wikimedia.org/wikipedia/en/f/f6/Echo_TV_series_poster.jpg" },
+      { title: "Deadpool & Wolverine", phase: "Phase 5", type: "Movie", year: 2024, rating: "7.8", description: "Wolverine joins forces with Deadpool to defeat a common enemy.", poster: "https://upload.wikimedia.org/wikipedia/en/4/4c/Deadpool_%26_Wolverine_poster.jpg" },
+      { title: "Agatha All Along", phase: "Phase 5", type: "Series", year: 2024, rating: "7.2", description: "Agatha Harkness gathers a coven of witches to face trials on the Witches' Road.", poster: "https://upload.wikimedia.org/wikipedia/en/6/6b/Agatha_All_Along_poster.jpg" },
+      { title: "What If...? Season 3", phase: "Phase 5", type: "Series", year: 2024, rating: "7.4", description: "The final chapter of multiversal animated stories across reality.", poster: "https://upload.wikimedia.org/wikipedia/en/d/d2/What_If...%3F_season_3_poster.jpg" },
+      { title: "Captain America: Brave New World", phase: "Phase 5", type: "Movie", year: 2025, rating: "6.8", description: "Sam Wilson steps into his role as Captain America in an intense global conflict.", poster: "https://upload.wikimedia.org/wikipedia/en/4/43/Captain_America_Brave_New_World_poster.jpg" },
+      { title: "Daredevil: Born Again", phase: "Phase 5", type: "Series", year: 2025, rating: "8.3", description: "Matt Murdock and Wilson Fisk clash once more in New York City.", poster: "https://upload.wikimedia.org/wikipedia/en/3/36/Daredevil_Born_Again_poster.jpg" },
+      { title: "Thunderbolts*", phase: "Phase 5", type: "Movie", year: 2025, rating: "TBD", description: "An anti-hero team goes on covert ops for the American government.", poster: "https://upload.wikimedia.org/wikipedia/en/2/22/Thunderbolts%2A_poster.jpg" },
+      { title: "Ironheart", phase: "Phase 5", type: "Series", year: 2025, rating: "TBD", description: "Riri Williams creates the most advanced suit of armor since Iron Man.", poster: "https://upload.wikimedia.org/wikipedia/en/6/61/Ironheart_poster.jpg" },
+
+      { title: "The Fantastic Four: First Steps", phase: "Phase 6", type: "Movie", year: 2025, rating: "TBD", description: "Marvel's First Family enters the MCU in a retro-futuristic timeline.", poster: "https://upload.wikimedia.org/wikipedia/en/2/23/The_Fantastic_Four_First_Steps_poster.jpg" },
+      { title: "Eyes of Wakanda", phase: "Phase 6", type: "Series", year: 2025, rating: "TBD", description: "Warriors throughout Wakandan history travel the globe retrieving vibranium artifacts.", poster: "https://upload.wikimedia.org/wikipedia/en/a/a2/Eyes_of_Wakanda_poster.jpg" },
+      { title: "Marvel Zombies", phase: "Phase 6", type: "Series", year: 2025, rating: "TBD", description: "New superheroes fight a growing undead plague sweeping through the multiverse.", poster: "https://upload.wikimedia.org/wikipedia/en/e/e6/Marvel_Zombies_poster.jpg" },
+      { title: "Wonder Man", phase: "Phase 6", type: "Series", year: 2026, rating: "TBD", description: "Hollywood actor Simon Williams gains ionic powers and enters the superhero stage.", poster: "https://upload.wikimedia.org/wikipedia/en/1/15/Wonder_Man_TV_series_poster.jpg" },
+      { title: "Spider-Man: Brand New Day", phase: "Phase 6", type: "Movie", year: 2026, rating: "TBD", description: "Peter Parker embarks on a fresh path in New York City.", poster: "https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg" },
+
+      { title: "Avengers: Doomsday", phase: "Upcoming", type: "Movie", year: 2026, rating: "TBD", description: "The Avengers face off against Doctor Doom in a major multiversal showdown.", poster: "https://upload.wikimedia.org/wikipedia/en/f/f6/Avengers_Doomsday_poster.jpg" },
+      { title: "Avengers: Secret Wars", phase: "Upcoming", type: "Movie", year: 2027, rating: "TBD", description: "The grand finale of the Multiverse Saga bringing together iconic heroes across worlds.", poster: "https://upload.wikimedia.org/wikipedia/en/1/1a/Avengers_Secret_Wars_poster.jpg" }
+    ];
+
+    let watchlist = JSON.parse(localStorage.getItem('mcu_watchlist') || '[]');
+    let activePhase = 'ALL';
+    let searchQuery = '';
+    let showOnlyWatchlist = false;
+
+    const grid = document.getElementById('mcuGrid');
+    const searchInput = document.getElementById('searchInput');
+    const watchlistToggleBtn = document.getElementById('watchlistToggleBtn');
+    const watchlistCount = document.getElementById('watchlistCount');
+    const noResults = document.getElementById('noResults');
+    const phaseFilterContainer = document.getElementById('phaseFilterContainer');
+
+    const detailModal = document.getElementById('detailModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalPoster = document.getElementById('modalPoster');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPhase = document.getElementById('modalPhase');
+    const modalYear = document.getElementById('modalYear');
+    const modalType = document.getElementById('modalType');
+    const modalRating = document.getElementById('modalRating');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalWatchlistBtn = document.getElementById('modalWatchlistBtn');
+
+    let currentModalMovie = null;
+
+    function createSvgFallback(title, phase) {
+      const isUpcoming = phase === "Upcoming";
+      const bgGradStart = isUpcoming ? "#065f46" : "#7f1d1d";
+      const bgGradEnd = isUpcoming ? "#022c22" : "#450a0a";
+      const accentColor = isUpcoming ? "#10b981" : "#ef4444";
+      
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="${bgGradStart}" />
+              <stop offset="100%" stop-color="${bgGradEnd}" />
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grad)"/>
+          <rect x="15" y="15" width="270" height="420" fill="none" stroke="${accentColor}" stroke-width="2" opacity="0.4"/>
+          <text x="150" y="210" font-family="sans-serif" font-weight="900" font-size="18" fill="#ffffff" text-anchor="middle">${title}</text>
+          <text x="150" y="240" font-family="sans-serif" font-size="14" fill="${accentColor}" text-anchor="middle" font-weight="bold">${phase.toUpperCase()}</text>
+        </svg>
+      `;
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+
+    function render() {
+      watchlistCount.textContent = watchlist.length;
+
+      const filtered = moviesData.filter(movie => {
+        const matchesPhase = activePhase === 'ALL' || movie.phase === activePhase;
+        const matchesSearch = movie.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              movie.description.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesWatchlist = !showOnlyWatchlist || watchlist.includes(movie.title);
+
+        return matchesPhase && matchesSearch && matchesWatchlist;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      noResults.classList.add('hidden');
+      grid.innerHTML = filtered.map(movie => {
+        const isUpcoming = movie.phase === "Upcoming";
+        
+        return `
+          <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-lg hover:border-slate-600 transition flex flex-col group cursor-pointer" onclick="openModal('${movie.title.replace(/'/g, "\'")}')">
+            <div class="relative aspect-[2/3] bg-slate-950 overflow-hidden">
+              <img src="${movie.poster}" alt="${movie.title}" 
+                   class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                   onerror="this.onerror=null; this.src='${createSvgFallback(movie.title.replace(/'/g, "&apos;"), movie.phase)}';">
+              <span class="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold rounded ${isUpcoming ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'} shadow">
+                ${movie.phase}
+              </span>
+            </div>
+            <div class="p-3 flex flex-col justify-between flex-grow">
+              <div>
+                <h3 class="font-bold text-white text-sm line-clamp-1 group-hover:text-red-400 transition">${movie.title}</h3>
+                <div class="flex items-center justify-between text-xs text-slate-400 mt-1">
+                  <span>${movie.year}</span>
+                  <span class="text-amber-400 font-semibold"><i class="fa-solid fa-star text-[10px]"></i> ${movie.rating}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openModal(title) {
+      const movie = moviesData.find(m => m.title === title);
+      if (!movie) return;
+      currentModalMovie = movie;
+
+      modalTitle.textContent = movie.title;
+      modalPhase.textContent = movie.phase;
+      modalYear.innerHTML = `<i class="fa-regular fa-calendar mr-1"></i> ${movie.year}`;
+      modalType.innerHTML = `<i class="fa-solid fa-tv mr-1"></i> ${movie.type}`;
+      modalRating.innerHTML = `<i class="fa-solid fa-star mr-1"></i> ${movie.rating}`;
+      modalDescription.textContent = movie.description;
+      modalPoster.src = movie.poster;
+      modalPoster.onerror = function() {
+        this.src = createSvgFallback(movie.title, movie.phase);
+      };
+
+      updateModalWatchlistBtn();
+      detailModal.classList.remove('hidden');
+    }
+
+    function updateModalWatchlistBtn() {
+      if (!currentModalMovie) return;
+      const inWatchlist = watchlist.includes(currentModalMovie.title);
+      if (inWatchlist) {
+        modalWatchlistBtn.className = "w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-amber-500 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition";
+        modalWatchlistBtn.innerHTML = `<i class="fa-solid fa-check"></i> In Watchlist`;
+      } else {
+        modalWatchlistBtn.className = "w-full py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white transition";
+        modalWatchlistBtn.innerHTML = `<i class="fa-solid fa-bookmark"></i> Add to Watchlist`;
+      }
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      render();
+    });
+
+    phaseFilterContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.phase-btn');
+      if (!btn) return;
+
+      document.querySelectorAll('.phase-btn').forEach(b => {
+        b.classList.remove('active', 'upcoming-active');
+      });
+
+      const phase = btn.dataset.phase;
+      activePhase = phase;
+
+      if (phase === 'Upcoming') {
+        btn.classList.add('upcoming-active');
+      } else {
+        btn.classList.add('active');
+      }
+
+      render();
+    });
+
+    watchlistToggleBtn.addEventListener('click', () => {
+      showOnlyWatchlist = !showOnlyWatchlist;
+      if (showOnlyWatchlist) {
+        watchlistToggleBtn.classList.replace('bg-slate-800', 'bg-amber-500');
+        watchlistToggleBtn.classList.replace('text-amber-400', 'text-slate-950');
+      } else {
+        watchlistToggleBtn.classList.replace('bg-amber-500', 'bg-slate-800');
+        watchlistToggleBtn.classList.replace('text-slate-950', 'text-amber-400');
+      }
+      render();
+    });
+
+    modalWatchlistBtn.addEventListener('click', () => {
+      if (!currentModalMovie) return;
+      const index = watchlist.indexOf(currentModalMovie.title);
+      if (index > -1) {
+        watchlist.splice(index, 1);
+      } else {
+        watchlist.push(currentModalMovie.title);
+      }
+      localStorage.setItem('mcu_watchlist', JSON.stringify(watchlist));
+      updateModalWatchlistBtn();
+      render();
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      detailModal.classList.add('hidden');
+    });
+
+    detailModal.addEventListener('click', (e) => {
+      if (e.target === detailModal) detailModal.classList.add('hidden');
+    });
+
+    render();
+  </script>
+</body>
+</html>
