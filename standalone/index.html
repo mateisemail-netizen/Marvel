@@ -128,16 +128,16 @@
   <script>
     const moviesData = [
       { title: "Iron Man", phase: "Phase 1", type: "Movie", year: 2008, rating: "7.9", description: "Tony Stark builds a high-tech suit of armor to fight global terrorism.", poster: "https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg" },
-      { title: "The Incredible Hulk", phase: "Phase 1", type: "Movie", year: 2008, rating: "6.6", description: "Bruce Banner seeks a cure for the gamma radiation that turns him into a green monster.", poster: "https://upload.wikimedia.org/wikipedia/en/8/88/The_Incredible_Hulk_poster.jpg" },
+      { title: "The Incredible Hulk", phase: "Phase 1", type: "Movie", year: 2008, rating: "6.6", description: "Bruce Banner seeks a cure for the gamma radiation that turns him into a green monster.", poster: "https://upload.wikimedia.org/wikipedia/en/f/f0/The_Incredible_Hulk_%28film%29_poster.jpg" },
       { title: "Iron Man 2", phase: "Phase 1", type: "Movie", year: 2010, rating: "6.9", description: "Tony Stark faces pressure from the government and a vengeance-seeking enemy.", poster: "https://upload.wikimedia.org/wikipedia/en/e/ed/Iron_Man_2_poster.jpg" },
-      { title: "Thor", phase: "Phase 1", type: "Movie", year: 2011, rating: "7.0", description: "The powerful god Thor is banished to Earth after reigniting an ancient war.", poster: "https://upload.wikimedia.org/wikipedia/en/7/7f/Thor_%28film%29_poster.jpg" },
+      { title: "Thor", phase: "Phase 1", type: "Movie", year: 2011, rating: "7.0", description: "The powerful god Thor is banished to Earth after reigniting an ancient war.", poster: "https://upload.wikimedia.org/wikipedia/en/9/95/Thor_%28film%29_poster.jpg" },
       { title: "Captain America: The First Avenger", phase: "Phase 1", type: "Movie", year: 2011, rating: "6.9", description: "Steve Rogers becomes Super Soldier Captain America to combat Hydra in WWII.", poster: "https://upload.wikimedia.org/wikipedia/en/3/37/Captain_America_The_First_Avenger_poster.jpg" },
       { title: "The Avengers", phase: "Phase 1", type: "Movie", year: 2012, rating: "8.0", description: "Earth's mightiest heroes unite to stop Loki and an alien invasion.", poster: "https://upload.wikimedia.org/wikipedia/en/8/8a/The_Avengers_%282012_film%29_poster.jpg" },
 
       { title: "Iron Man 3", phase: "Phase 2", type: "Movie", year: 2013, rating: "7.1", description: "Tony Stark embarks on a journey of retribution against the mysterious Mandarin.", poster: "https://upload.wikimedia.org/wikipedia/en/1/19/Iron_Man_3_poster.jpg" },
-      { title: "Thor: The Dark World", phase: "Phase 2", type: "Movie", year: 2013, rating: "6.8", description: "Thor battles Malekith and the Dark Elves to save Nine Realms.", poster: "https://upload.wikimedia.org/wikipedia/en/7/7e/Thor_The_Dark_World_poster.jpg" },
+      { title: "Thor: The Dark World", phase: "Phase 2", type: "Movie", year: 2013, rating: "6.8", description: "Thor battles Malekith and the Dark Elves to save Nine Realms.", poster: "https://upload.wikimedia.org/wikipedia/en/7/7f/Thor_The_Dark_World_poster.jpg" },
       { title: "Captain America: The Winter Soldier", phase: "Phase 2", type: "Movie", year: 2014, rating: "7.8", description: "Cap uncovers a conspiracy within S.H.I.E.L.D. while facing a deadly assassin.", poster: "https://upload.wikimedia.org/wikipedia/en/9/9e/Captain_America_The_Winter_Soldier_poster.jpg" },
-      { title: "Guardians of the Galaxy", phase: "Phase 2", type: "Movie", year: 2014, rating: "8.0", description: "A group of intergalactic misfits band together to stop a cosmic warlord.", poster: "https://upload.wikimedia.org/wikipedia/en/b/b5/Guardians_of_the_Galaxy_poster.jpg" },
+      { title: "Guardians of the Galaxy", phase: "Phase 2", type: "Movie", year: 2014, rating: "8.0", description: "A group of intergalactic misfits band together to stop a cosmic warlord.", poster: "https://upload.wikimedia.org/wikipedia/en/3/33/Guardians_of_the_Galaxy_%28film%29_poster.jpg" },
       { title: "Avengers: Age of Ultron", phase: "Phase 2", type: "Movie", year: 2015, rating: "7.3", description: "The Avengers fight to destroy the rogue artificial intelligence Ultron.", poster: "https://upload.wikimedia.org/wikipedia/en/f/ff/Avengers_Age_of_Ultron_poster.jpg" },
       { title: "Ant-Man", phase: "Phase 2", type: "Movie", year: 2015, rating: "7.3", description: "Thief Scott Lang acquires a suit that allows him to shrink in scale but increase in strength.", poster: "https://upload.wikimedia.org/wikipedia/en/7/75/Ant-Man_poster.jpg" },
 
@@ -154,7 +154,7 @@
       { title: "Spider-Man: Far From Home", phase: "Phase 3", type: "Movie", year: 2019, rating: "7.4", description: "Peter Parker's European school trip is disrupted by mysterious elementals.", poster: "https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg" },
 
       { title: "WandaVision", phase: "Phase 4", type: "Series", year: 2021, rating: "7.9", description: "Wanda and Vision live idyllic suburban lives, but suspect everything is not as it seems.", poster: "https://upload.wikimedia.org/wikipedia/en/3/3d/WandaVision_poster.jpg" },
-      { title: "The Falcon and the Winter Soldier", phase: "Phase 4", type: "Series", year: 2021, rating: "7.1", description: "Sam Wilson and Bucky Barnes team up on a global adventure that tests their abilities.", poster: "https://upload.wikimedia.org/wikipedia/en/f/f6/The_Falcon_and_the_Winter_Soldier_poster.jpg" },
+      { title: "The Falcon and the Winter Soldier", phase: "Phase 4", type: "Series", year: 2021, rating: "7.1", description: "Sam Wilson and Bucky Barnes team up on a global adventure that tests their abilities.", poster: "https://upload.wikimedia.org/wikipedia/en/9/9a/The_Falcon_and_the_Winter_Soldier_logo.png", posterFit: "contain" },
       { title: "Loki Season 1", phase: "Phase 4", type: "Series", year: 2021, rating: "8.2", description: "The God of Mischief steps out of his brother's shadow in a journey through time.", poster: "https://upload.wikimedia.org/wikipedia/en/c/c5/Loki_season_1_poster.jpg" },
       { title: "Black Widow", phase: "Phase 4", type: "Movie", year: 2021, rating: "6.7", description: "Natasha Romanoff confronts the darker parts of her ledger when a dangerous conspiracy arises.", poster: "https://upload.wikimedia.org/wikipedia/en/e/e9/Black_Widow_%282021_film%29_poster.jpg" },
       { title: "What If...? Season 1", phase: "Phase 4", type: "Series", year: 2021, rating: "7.4", description: "Exploring pivotal moments from the MCU and turning them on their head.", poster: "https://upload.wikimedia.org/wikipedia/en/1/1b/What_If...%3F_season_1_poster.jpg" },
@@ -187,14 +187,14 @@
       { title: "Thunderbolts*", phase: "Phase 5", type: "Movie", year: 2025, rating: "TBD", description: "An anti-hero team goes on covert ops for the American government.", poster: "https://upload.wikimedia.org/wikipedia/en/2/22/Thunderbolts%2A_poster.jpg" },
       { title: "Ironheart", phase: "Phase 5", type: "Series", year: 2025, rating: "TBD", description: "Riri Williams creates the most advanced suit of armor since Iron Man.", poster: "https://upload.wikimedia.org/wikipedia/en/6/61/Ironheart_poster.jpg" },
 
-      { title: "The Fantastic Four: First Steps", phase: "Phase 6", type: "Movie", year: 2025, rating: "TBD", description: "Marvel's First Family enters the MCU in a retro-futuristic timeline.", poster: "https://upload.wikimedia.org/wikipedia/en/2/23/The_Fantastic_Four_First_Steps_poster.jpg" },
+      { title: "The Fantastic Four: First Steps", phase: "Phase 6", type: "Movie", year: 2025, rating: "TBD", description: "Marvel's First Family enters the MCU in a retro-futuristic timeline.", poster: "https://upload.wikimedia.org/wikipedia/en/1/13/The_Fantastic_Four_First_Steps_poster.jpg" },
       { title: "Eyes of Wakanda", phase: "Phase 6", type: "Series", year: 2025, rating: "TBD", description: "Warriors throughout Wakandan history travel the globe retrieving vibranium artifacts.", poster: "https://upload.wikimedia.org/wikipedia/en/a/a2/Eyes_of_Wakanda_poster.jpg" },
       { title: "Marvel Zombies", phase: "Phase 6", type: "Series", year: 2025, rating: "TBD", description: "New superheroes fight a growing undead plague sweeping through the multiverse.", poster: "https://upload.wikimedia.org/wikipedia/en/e/e6/Marvel_Zombies_poster.jpg" },
-      { title: "Wonder Man", phase: "Phase 6", type: "Series", year: 2026, rating: "TBD", description: "Hollywood actor Simon Williams gains ionic powers and enters the superhero stage.", poster: "https://upload.wikimedia.org/wikipedia/en/1/15/Wonder_Man_TV_series_poster.jpg" },
-      { title: "Spider-Man: Brand New Day", phase: "Phase 6", type: "Movie", year: 2026, rating: "TBD", description: "Peter Parker embarks on a fresh path in New York City.", poster: "https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg" },
+      { title: "Wonder Man", phase: "Phase 6", type: "Series", year: 2026, rating: "TBD", description: "Hollywood actor Simon Williams gains ionic powers and enters the superhero stage." },
+      { title: "Spider-Man: Brand New Day", phase: "Phase 6", type: "Movie", year: 2026, rating: "TBD", description: "Peter Parker embarks on a fresh path in New York City.", poster: "https://upload.wikimedia.org/wikipedia/en/9/9a/Spider-Man_Brand_New_Day_poster.jpg" },
 
-      { title: "Avengers: Doomsday", phase: "Upcoming", type: "Movie", year: 2026, rating: "TBD", description: "The Avengers face off against Doctor Doom in a major multiversal showdown.", poster: "https://upload.wikimedia.org/wikipedia/en/f/f6/Avengers_Doomsday_poster.jpg" },
-      { title: "Avengers: Secret Wars", phase: "Upcoming", type: "Movie", year: 2027, rating: "TBD", description: "The grand finale of the Multiverse Saga bringing together iconic heroes across worlds.", poster: "https://upload.wikimedia.org/wikipedia/en/1/1a/Avengers_Secret_Wars_poster.jpg" }
+      { title: "Avengers: Doomsday", phase: "Upcoming", type: "Movie", year: 2026, rating: "TBD", description: "The Avengers face off against Doctor Doom in a major multiversal showdown.", poster: "https://upload.wikimedia.org/wikipedia/en/e/ee/Avengers_Doomsday_poster.jpg" },
+      { title: "Avengers: Secret Wars", phase: "Upcoming", type: "Movie", year: 2027, rating: "TBD", description: "The grand finale of the Multiverse Saga bringing together iconic heroes across worlds." }
     ];
 
     let watchlist = JSON.parse(localStorage.getItem('mcu_watchlist') || '[]');
@@ -266,12 +266,14 @@
       noResults.classList.add('hidden');
       grid.innerHTML = filtered.map(movie => {
         const isUpcoming = movie.phase === "Upcoming";
-        
+        const poster = movie.poster || createSvgFallback(movie.title, movie.phase);
+        const posterFit = movie.posterFit === "contain" ? "object-contain p-6" : "object-cover";
+
         return `
           <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-lg hover:border-slate-600 transition flex flex-col group cursor-pointer" onclick="openModal('${movie.title.replace(/'/g, "\'")}')">
             <div class="relative aspect-[2/3] bg-slate-950 overflow-hidden">
-              <img src="${movie.poster}" alt="${movie.title}" 
-                   class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+              <img src="${poster}" alt="${movie.title}" loading="lazy" decoding="async"
+                   class="w-full h-full ${posterFit} group-hover:scale-105 transition duration-300"
                    onerror="this.onerror=null; this.src='${createSvgFallback(movie.title.replace(/'/g, "&apos;"), movie.phase)}';">
               <span class="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold rounded ${isUpcoming ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'} shadow">
                 ${movie.phase}
@@ -302,8 +304,9 @@
       modalType.innerHTML = `<i class="fa-solid fa-tv mr-1"></i> ${movie.type}`;
       modalRating.innerHTML = `<i class="fa-solid fa-star mr-1"></i> ${movie.rating}`;
       modalDescription.textContent = movie.description;
-      modalPoster.src = movie.poster;
+      modalPoster.src = movie.poster || createSvgFallback(movie.title, movie.phase);
       modalPoster.onerror = function() {
+        this.onerror = null;
         this.src = createSvgFallback(movie.title, movie.phase);
       };
 
