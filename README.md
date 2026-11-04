@@ -39,3 +39,7 @@ npm run dev     # local server
 npm run build   # typecheck + production build
 node --test tests/mapGeometry.test.mjs
 ```
+
+## GitHub Pages
+
+In the repository settings, open **Pages** and set the build and deployment source to **GitHub Actions**. The workflow deploys `standalone/` to the project site.
