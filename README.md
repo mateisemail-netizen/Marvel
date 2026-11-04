@@ -29,6 +29,7 @@ MCU / Earth-616, Fox X-Men (Earth-10005), Raimi Spider-Man, Amazing Spider-Man, 
 - Title logos are local prototype assets for a personal archive; source pages are tracked in `public/assets/posters/SOURCES.md`.
 - Synopses ship from TMDB overviews via `node scripts/fetch-synopses.mjs` (needs a free `TMDB_API_KEY`).
 - Mobile gets the same archive with touch gestures: swipe between views, drag the sidebar drawer, collapse panels for more map space.
+- The standalone HTML version is in `standalone/index.html`; `marvel_multiverse_archive.zip` contains that page.
 
 ## Local development
 
